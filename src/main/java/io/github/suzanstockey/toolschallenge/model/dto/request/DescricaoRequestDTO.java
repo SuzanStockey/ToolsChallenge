@@ -1,4 +1,4 @@
-package io.github.suzanstockey.toolschalenge.model.dto.request;
+package io.github.suzanstockey.toolschallenge.model.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

@@ -1,10 +1,10 @@
-package io.github.suzanstockey.toolschalenge;
+package io.github.suzanstockey.toolschallenge;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ToolsChalengeApplicationTests {
+class ToolsChallengeApplicationTests {
 
     @Test
     void contextLoads() {

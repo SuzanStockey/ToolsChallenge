@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.github.suzanstockey</groupId>
-    <artifactId>tools-chalenge</artifactId>
+    <artifactId>tools-challenge</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ToolsChalenge</name>
-    <description>ToolsChalenge</description>
+    <name>ToolsChallenge</name>
+    <description>ToolsChallenge</description>
     <url/>
     <licenses>
         <license/>

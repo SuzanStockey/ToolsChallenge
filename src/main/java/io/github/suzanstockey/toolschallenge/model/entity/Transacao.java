@@ -1,4 +1,4 @@
-package io.github.suzanstockey.toolschalenge.model.entity;
+package io.github.suzanstockey.toolschallenge.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

@@ -1,4 +1,4 @@
-package io.github.suzanstockey.toolschalenge.model.dto.request;
+package io.github.suzanstockey.toolschallenge.model.dto.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

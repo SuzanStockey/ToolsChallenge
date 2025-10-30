@@ -1,4 +1,4 @@
-package io.github.suzanstockey.toolschalenge.model.dto.response;
+package io.github.suzanstockey.toolschallenge.model.dto.response;
 
 import lombok.Data;
 
