@@ -1,5 +1,6 @@
 package io.github.suzanstockey.toolschallenge.controller.advice;
 
+import io.github.suzanstockey.toolschallenge.exception.EstornoNaoPermitidoException;
 import io.github.suzanstockey.toolschallenge.exception.TransacaoJaExistenteException;
 import io.github.suzanstockey.toolschallenge.exception.TransacaoNaoEncontradaException;
 import org.springframework.http.HttpStatus;
@@ -29,5 +30,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleTransacaoNaoEncontrada(TransacaoNaoEncontradaException e) {
         Map<String, String> erro = Map.of("erro", e.getMessage());
         return new ResponseEntity<>(erro, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Captura exceções de regras de negócio (ex: estorno não permitido) e retorna um HTTP 422 (Unprocessable Entity).
+     */
+    @ExceptionHandler(EstornoNaoPermitidoException.class)
+    public ResponseEntity<Map<String, String>> handleEstornoNaoPermitido(EstornoNaoPermitidoException e) {
+        Map<String, String> erro = Map.of("erro", e.getMessage());
+        return new ResponseEntity<>(erro, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }
