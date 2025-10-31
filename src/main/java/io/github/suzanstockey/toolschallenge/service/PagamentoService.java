@@ -1,7 +1,7 @@
 package io.github.suzanstockey.toolschallenge.service;
 
-import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequestDTO;
-import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponseDTO;
+import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequest;
+import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponse;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface PagamentoService {
      * @param requestDTO DTO com os dados do pagamento.
      * @return DTO com a resposta da transação.
      */
-    PagamentoResponseDTO realizarPagamento(PagamentoRequestDTO requestDTO);
+    PagamentoResponse realizarPagamento(PagamentoRequest requestDTO);
 
     /**
      * Consulta uma transação pelo seu ID.
@@ -24,14 +24,14 @@ public interface PagamentoService {
      * @param id O ID da transação.
      * @return DTO com a resposta da transação.
      */
-    PagamentoResponseDTO consultarPorId(String id);
+    PagamentoResponse consultarPorId(String id);
 
     /**
      * Lista todas as transações de pagamento.
      *
      * @return Lista de DTOs de resposta.
      */
-    List<PagamentoResponseDTO> consultarTodos();
+    List<PagamentoResponse> consultarTodos();
 
     /**
      * Realiza o estorno (cancelamento) de uma transação.
@@ -39,5 +39,5 @@ public interface PagamentoService {
      * @param id O ID da transação a ser estornada.
      * @return DTO com a resposta da transação estornada.
      */
-    PagamentoResponseDTO realizarEstorno(String id);
+    PagamentoResponse realizarEstorno(String id);
 }

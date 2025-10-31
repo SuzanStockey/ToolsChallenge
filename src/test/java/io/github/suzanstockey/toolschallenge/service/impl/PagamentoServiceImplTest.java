@@ -1,8 +1,8 @@
 package io.github.suzanstockey.toolschallenge.service.impl;
 
 import io.github.suzanstockey.toolschallenge.model.StatusTransacao;
-import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequestDTO;
-import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponseDTO;
+import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequest;
+import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponse;
 import io.github.suzanstockey.toolschallenge.model.entity.Descricao;
 import io.github.suzanstockey.toolschallenge.model.entity.Transacao;
 import io.github.suzanstockey.toolschallenge.repository.TransacaoRepository;
@@ -34,21 +34,21 @@ class PagamentoServiceImplTest {
     @DisplayName("Deve realizar um pagamento com sucesso (caminho feliz)")
     void deveRealizarPagamentoComSucesso() {
 
-        var requestDTO = mock(PagamentoRequestDTO.class);
+        var requestDTO = mock(PagamentoRequest.class);
 
         var transacaoEntidade = mock(Transacao.class);
         var descricaoEntidade = mock(Descricao.class);
         when(transacaoEntidade.getId()).thenReturn("12345-abc");
         when(transacaoEntidade.getDescricao()).thenReturn(descricaoEntidade);
 
-        var responseDTO = mock(PagamentoResponseDTO.class);
+        var responseDTO = mock(PagamentoResponse.class);
 
         when(repository.existsById("12345-abc")).thenReturn(false);
         when(mapper.toEntity(requestDTO)).thenReturn(transacaoEntidade);
         when(repository.save(transacaoEntidade)).thenReturn(transacaoEntidade);
         when(mapper.toResponse(transacaoEntidade)).thenReturn(responseDTO);
 
-        PagamentoResponseDTO resultado = pagamentoService.realizarPagamento(requestDTO);
+        PagamentoResponse resultado = pagamentoService.realizarPagamento(requestDTO);
 
         assertNotNull(resultado);
         assertEquals(responseDTO, resultado);

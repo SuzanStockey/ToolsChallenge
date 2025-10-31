@@ -1,6 +1,6 @@
 package io.github.suzanstockey.toolschallenge.model.dto.response;
 
-public record DescricaoResponseDTO (
+public record DescricaoResponse(
 
     String valor,
     String dataHora,

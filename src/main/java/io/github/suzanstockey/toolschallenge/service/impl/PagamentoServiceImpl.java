@@ -4,8 +4,8 @@ import io.github.suzanstockey.toolschallenge.exception.EstornoNaoPermitidoExcept
 import io.github.suzanstockey.toolschallenge.exception.TransacaoJaExistenteException;
 import io.github.suzanstockey.toolschallenge.exception.TransacaoNaoEncontradaException;
 import io.github.suzanstockey.toolschallenge.model.StatusTransacao;
-import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequestDTO;
-import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponseDTO;
+import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequest;
+import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponse;
 import io.github.suzanstockey.toolschallenge.model.entity.Transacao;
 import io.github.suzanstockey.toolschallenge.repository.TransacaoRepository;
 import io.github.suzanstockey.toolschallenge.service.PagamentoService;
@@ -27,7 +27,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 
     @Override
     @Transactional
-    public PagamentoResponseDTO realizarPagamento(PagamentoRequestDTO requestDTO) {
+    public PagamentoResponse realizarPagamento(PagamentoRequest requestDTO) {
         Transacao transacao = mapper.toEntity(requestDTO);
 
         if (repository.existsById(transacao.getId())) {
@@ -71,13 +71,13 @@ public class PagamentoServiceImpl implements PagamentoService {
 
     @Override
     @Transactional(readOnly = true)
-    public PagamentoResponseDTO consultarPorId(String id) {
+    public PagamentoResponse consultarPorId(String id) {
         Transacao transacao = findTransacaoById(id);
         return mapper.toResponse(transacao);
     }
 
     @Override
-    public List<PagamentoResponseDTO> consultarTodos() {
+    public List<PagamentoResponse> consultarTodos() {
         List<Transacao> transacoes = repository.findAll();
 
         return transacoes.stream()
@@ -87,7 +87,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 
     @Override
     @Transactional
-    public PagamentoResponseDTO realizarEstorno(String id) {
+    public PagamentoResponse realizarEstorno(String id) {
         Transacao transacao = findTransacaoById(id);
 
         StatusTransacao statusAtual = transacao.getDescricao().getStatus();

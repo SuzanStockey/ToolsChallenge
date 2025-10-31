@@ -1,11 +1,10 @@
 package io.github.suzanstockey.toolschallenge.controller;
 
-import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequestDTO;
-import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponseDTO;
+import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequest;
+import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponse;
 import io.github.suzanstockey.toolschallenge.service.PagamentoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +25,9 @@ public class PagamentoController {
      * @return ResponseEntity com o PagamentoResponseDTO e status HTTP.
      */
     @PostMapping
-    public ResponseEntity<PagamentoResponseDTO> realizarPagamento(@Valid @RequestBody PagamentoRequestDTO requestDTO) {
+    public ResponseEntity<PagamentoResponse> realizarPagamento(@Valid @RequestBody PagamentoRequest requestDTO) {
 
-        PagamentoResponseDTO responseDTO = pagamentoService.realizarPagamento(requestDTO);
+        PagamentoResponse responseDTO = pagamentoService.realizarPagamento(requestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -39,9 +38,9 @@ public class PagamentoController {
      * @return ResponseEntity com o PagamentoResponseDTO da transação encontrada.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<PagamentoResponseDTO> consultarPorId(@PathVariable String id) {
+    public ResponseEntity<PagamentoResponse> consultarPorId(@PathVariable String id) {
 
-        PagamentoResponseDTO responseDTO = pagamentoService.consultarPorId(id);
+        PagamentoResponse responseDTO = pagamentoService.consultarPorId(id);
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -51,9 +50,9 @@ public class PagamentoController {
      * @return ResponseEntity com uma Lista de PagamentoResponseDTO.
      */
     @GetMapping
-    public ResponseEntity<List<PagamentoResponseDTO>> consultarTodos() {
+    public ResponseEntity<List<PagamentoResponse>> consultarTodos() {
 
-        List<PagamentoResponseDTO> responseList = pagamentoService.consultarTodos();
+        List<PagamentoResponse> responseList = pagamentoService.consultarTodos();
         return ResponseEntity.ok(responseList);
     }
 
@@ -64,9 +63,9 @@ public class PagamentoController {
      * @return ResponseEntity com o PagamentoResponseDTO da transação estornada.
      */
     @PostMapping("/{id}/estorno")
-    public ResponseEntity<PagamentoResponseDTO> realizarEstorno(@PathVariable String id) {
+    public ResponseEntity<PagamentoResponse> realizarEstorno(@PathVariable String id) {
 
-        PagamentoResponseDTO responseDTO = pagamentoService.realizarEstorno(id);
+        PagamentoResponse responseDTO = pagamentoService.realizarEstorno(id);
         return ResponseEntity.ok(responseDTO);
     }
 }

@@ -1,6 +1,6 @@
 package io.github.suzanstockey.toolschallenge.model.dto.response;
 
-public record FormaPagamentoResponseDTO (
+public record FormaPagamentoResponse(
     String tipo,
     String parcelas
 ){}

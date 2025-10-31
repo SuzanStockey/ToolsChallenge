@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-public record PagamentoRequestDTO (
+public record PagamentoRequest(
 
     @JsonProperty("transacao")
     @NotNull(message="O objeto 'transacao' não pode ser nulo.")
     @Valid
-    TransacaoRequestDTO transacao
+    TransacaoRequest transacao
 ){}

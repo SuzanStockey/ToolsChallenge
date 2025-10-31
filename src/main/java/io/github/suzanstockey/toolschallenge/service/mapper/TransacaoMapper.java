@@ -1,11 +1,11 @@
 package io.github.suzanstockey.toolschallenge.service.mapper;
 
 import io.github.suzanstockey.toolschallenge.model.TipoPagamento;
-import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequestDTO;
-import io.github.suzanstockey.toolschallenge.model.dto.response.DescricaoResponseDTO;
-import io.github.suzanstockey.toolschallenge.model.dto.response.FormaPagamentoResponseDTO;
-import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponseDTO;
-import io.github.suzanstockey.toolschallenge.model.dto.response.TransacaoResponseDTO;
+import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequest;
+import io.github.suzanstockey.toolschallenge.model.dto.response.DescricaoResponse;
+import io.github.suzanstockey.toolschallenge.model.dto.response.FormaPagamentoResponse;
+import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponse;
+import io.github.suzanstockey.toolschallenge.model.dto.response.TransacaoResponse;
 import io.github.suzanstockey.toolschallenge.model.entity.Descricao;
 import io.github.suzanstockey.toolschallenge.model.entity.FormaPagamento;
 import io.github.suzanstockey.toolschallenge.model.entity.Transacao;
@@ -24,7 +24,7 @@ public class TransacaoMapper {
      * Converte o DTO de Request para a Entidade Transacao.
      */
 
-    public Transacao toEntity(PagamentoRequestDTO requestDTO) {
+    public Transacao toEntity(PagamentoRequest requestDTO) {
         var dto = requestDTO.transacao();
 
         Descricao descricao = new Descricao();
@@ -47,11 +47,11 @@ public class TransacaoMapper {
     /**
      * Converte a Entidade Transacao para o DTO (Record) de Response.
      */
-    public PagamentoResponseDTO toResponse(Transacao entity) {
+    public PagamentoResponse toResponse(Transacao entity) {
         var descEntity = entity.getDescricao();
         var formaEntity = entity.getFormaPagamento();
 
-        DescricaoResponseDTO descResp = new DescricaoResponseDTO(
+        DescricaoResponse descResp = new DescricaoResponse(
                 descEntity.getValor().toString(),
                 formatDataHora(descEntity.getDataHora()),
                 descEntity.getEstabelecimento(),
@@ -60,19 +60,19 @@ public class TransacaoMapper {
                 descEntity.getStatus().toString()
         );
 
-        FormaPagamentoResponseDTO formaResp = new FormaPagamentoResponseDTO(
+        FormaPagamentoResponse formaResp = new FormaPagamentoResponse(
                 formaEntity.getTipo().toString(),
                 formaEntity.getParcelas().toString()
         );
 
-        TransacaoResponseDTO transResp = new TransacaoResponseDTO(
+        TransacaoResponse transResp = new TransacaoResponse(
                 entity.getCartao(),
                 entity.getId(),
                 descResp,
                 formaResp
         );
 
-        return new PagamentoResponseDTO(transResp);
+        return new PagamentoResponse(transResp);
     }
 
     /**

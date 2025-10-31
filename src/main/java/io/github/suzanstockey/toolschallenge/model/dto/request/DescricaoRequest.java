@@ -3,7 +3,7 @@ package io.github.suzanstockey.toolschallenge.model.dto.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 
-public record DescricaoRequestDTO (
+public record DescricaoRequest(
 
     @NotBlank(message="O campo 'valor' é obrigatório.")
     String valor,
