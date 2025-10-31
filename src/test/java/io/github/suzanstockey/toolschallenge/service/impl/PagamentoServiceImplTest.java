@@ -1,5 +1,6 @@
 package io.github.suzanstockey.toolschallenge.service.impl;
 
+import io.github.suzanstockey.toolschallenge.exception.TransacaoJaExistenteException;
 import io.github.suzanstockey.toolschallenge.model.StatusTransacao;
 import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequest;
 import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponse;
@@ -14,8 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,5 +59,26 @@ class PagamentoServiceImplTest {
         verify(mapper).toResponse(transacaoEntidade);
 
         verify(descricaoEntidade).setStatus(StatusTransacao.AUTORIZADO);
+    }
+
+
+    @Test
+    @DisplayName("Deve falhar ao tentar realizar pagamento com ID duplicado")
+    void deveFalharPagamentoComIdDuplicado() {
+        final String idDuplicado = "id-ja-existe-123";
+
+        var requestDTO = mock(PagamentoRequest.class);
+        var transacaoEntidade = mock(Transacao.class);
+        when(mapper.toEntity(requestDTO)).thenReturn(transacaoEntidade);
+
+        when(transacaoEntidade.getId()).thenReturn(idDuplicado);
+
+        when(repository.existsById(idDuplicado)).thenReturn(true);
+
+        TransacaoJaExistenteException exception = assertThrows(TransacaoJaExistenteException.class, () -> pagamentoService.realizarPagamento(requestDTO));
+
+        assertTrue(exception.getMessage().contains(idDuplicado));
+        verify(repository, never()).save(any(Transacao.class));
+        verify(mapper, never()).toResponse(any(Transacao.class));
     }
 }
