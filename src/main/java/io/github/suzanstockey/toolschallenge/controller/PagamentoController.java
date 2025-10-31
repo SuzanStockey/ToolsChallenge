@@ -2,7 +2,9 @@ package io.github.suzanstockey.toolschallenge.controller;
 
 import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequestDTO;
 import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponseDTO;
+import io.github.suzanstockey.toolschallenge.service.PagamentoService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +14,12 @@ import java.util.List;
 @RequestMapping("/api/pagamentos")
 public class PagamentoController {
 
-    //TODO: Injetar PagamentoService quando ele for criado.
+    private final PagamentoService pagamentoService;
+
+    @Autowired
+    public PagamentoController(PagamentoService pagamentoService) {
+        this.pagamentoService = pagamentoService;
+    }
 
     /**
      * Endpoint para realizar um novo pagamento.
@@ -24,8 +31,8 @@ public class PagamentoController {
     @PostMapping
     public ResponseEntity<PagamentoResponseDTO> realizarPagamento(@Valid @RequestBody PagamentoRequestDTO requestDTO) {
 
-        // A lógica de negócio será implementada no PagamentoService
-        return ResponseEntity.ok(null);
+        PagamentoResponseDTO responseDTO = pagamentoService.realizarPagamento(requestDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 
     /**
@@ -37,8 +44,8 @@ public class PagamentoController {
     @GetMapping("/{id}")
     public ResponseEntity<PagamentoResponseDTO> consultarPorId(@PathVariable String id) {
 
-        // A lógica de negócio será implementada no PagamentoService
-        return ResponseEntity.ok(null);
+        PagamentoResponseDTO responseDTO = pagamentoService.consultarPorId(id);
+        return ResponseEntity.ok(responseDTO);
     }
 
     /**
@@ -49,8 +56,8 @@ public class PagamentoController {
     @GetMapping
     public ResponseEntity<List<PagamentoResponseDTO>> consultarTodos() {
 
-        // A lógica de negócio será implementada no PagamentoService
-        return ResponseEntity.ok(null);
+        List<PagamentoResponseDTO> responseList = pagamentoService.consultarTodos();
+        return ResponseEntity.ok(responseList);
     }
 
     /**
@@ -62,7 +69,7 @@ public class PagamentoController {
     @PostMapping("/{id}/estorno")
     public ResponseEntity<PagamentoResponseDTO> realizarEstorno(@PathVariable String id) {
 
-        // A lógica de negócio será implementada no PagamentoService
-        return ResponseEntity.ok(null);
+        PagamentoResponseDTO responseDTO = pagamentoService.realizarEstorno(id);
+        return ResponseEntity.ok(responseDTO);
     }
 }
