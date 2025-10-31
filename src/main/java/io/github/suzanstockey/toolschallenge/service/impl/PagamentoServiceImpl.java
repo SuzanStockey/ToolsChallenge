@@ -1,25 +1,69 @@
 package io.github.suzanstockey.toolschallenge.service.impl;
 
+import io.github.suzanstockey.toolschallenge.exception.TransacaoJaExistenteException;
+import io.github.suzanstockey.toolschallenge.model.StatusTransacao;
 import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequestDTO;
 import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponseDTO;
+import io.github.suzanstockey.toolschallenge.model.entity.Transacao;
 import io.github.suzanstockey.toolschallenge.repository.TransacaoRepository;
 import io.github.suzanstockey.toolschallenge.service.PagamentoService;
+import io.github.suzanstockey.toolschallenge.service.mapper.TransacaoMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
 public class PagamentoServiceImpl implements PagamentoService {
 
     private final TransacaoRepository repository;
+    private final TransacaoMapper mapper;
 
     @Override
+    @Transactional
     public PagamentoResponseDTO realizarPagamento(PagamentoRequestDTO requestDTO) {
-        //TODO: Implementar lógica de autorização e salvamento
-        throw new UnsupportedOperationException("Método realizarPagamento ainda não implementado");
+        Transacao transacao = mapper.toEntity(requestDTO);
+
+        if (repository.existsById(transacao.getId())) {
+            throw new TransacaoJaExistenteException(transacao.getId());
+        }
+
+        simularAutorizacao(transacao);
+
+        Transacao transacaoSalva = repository.save(transacao);
+
+        return mapper.toResponse(transacaoSalva);
+    }
+
+    /**
+     * Simula o processo de autorização de uma transação.
+     * Define o status como AUTORIZADO e gera os códigos de NSU e Autorização.
+     * @param transacao A entidade Transacao a ser autorizada.
+     */
+    private void simularAutorizacao(Transacao transacao) {
+        transacao.getDescricao().setStatus(StatusTransacao.AUTORIZADO);
+
+        transacao.getDescricao().setNsu(gerarNsu());
+        transacao.getDescricao().setCodigoAutorizacao(gerarCodigoAutorizacao());
+    }
+
+    /**
+     * Gera um NSU (Número Sequencial Único) aleatório de 10 dígitos
+     */
+    private String gerarNsu() {
+        long nsu = ThreadLocalRandom.current().nextLong(1_000_000_000L, 10_000_000_000L);
+        return String.format("%010d", nsu);
+    }
+
+    /**
+     * Gera um Código de Autorização aleatório de 9 dígitos
+     */
+    private String gerarCodigoAutorizacao() {
+        long codigo = ThreadLocalRandom.current().nextLong(100_000_000L, 1_000_000_000L);
+        return String.format("%09d", codigo);
     }
 
     public PagamentoResponseDTO consultarPorId(String id) {
