@@ -1,6 +1,7 @@
 package io.github.suzanstockey.toolschallenge.service.impl;
 
 import io.github.suzanstockey.toolschallenge.exception.TransacaoJaExistenteException;
+import io.github.suzanstockey.toolschallenge.exception.TransacaoNaoEncontradaException;
 import io.github.suzanstockey.toolschallenge.model.StatusTransacao;
 import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequestDTO;
 import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponseDTO;
@@ -8,12 +9,13 @@ import io.github.suzanstockey.toolschallenge.model.entity.Transacao;
 import io.github.suzanstockey.toolschallenge.repository.TransacaoRepository;
 import io.github.suzanstockey.toolschallenge.service.PagamentoService;
 import io.github.suzanstockey.toolschallenge.service.mapper.TransacaoMapper;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,15 +68,21 @@ public class PagamentoServiceImpl implements PagamentoService {
         return String.format("%09d", codigo);
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public PagamentoResponseDTO consultarPorId(String id) {
-        //TODO: Implementar lógica de buscar por ID
-        throw new UnsupportedOperationException("Método consultarPorId ainda não implementado");
+        Transacao transacao = repository.findById(id).orElseThrow(() -> new TransacaoNaoEncontradaException(id));
+
+        return mapper.toResponse(transacao);
     }
 
     @Override
     public List<PagamentoResponseDTO> consultarTodos() {
-        //TODO: Implementar lógica de busca de todos
-        throw new UnsupportedOperationException("Método consultarTodos ainda não implementado");
+        List<Transacao> transacoes = repository.findAll();
+
+        return transacoes.stream()
+                .map(mapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
