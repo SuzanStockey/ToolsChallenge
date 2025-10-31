@@ -1,5 +1,6 @@
 package io.github.suzanstockey.toolschallenge.service.impl;
 
+import io.github.suzanstockey.toolschallenge.exception.EstornoNaoPermitidoException;
 import io.github.suzanstockey.toolschallenge.exception.TransacaoJaExistenteException;
 import io.github.suzanstockey.toolschallenge.exception.TransacaoNaoEncontradaException;
 import io.github.suzanstockey.toolschallenge.model.StatusTransacao;
@@ -161,4 +162,70 @@ class PagamentoServiceImplTest {
         verify(repository).findAll();
         verify(mapper, never()).toResponse(any(Transacao.class));
     }
+
+    @Test
+    @DisplayName("Deve realizar estorno com sucesso (caminho feliz)")
+    void deveRealizarEstornoComSucesso(){
+        final String idTeste = "id-autorizado-123";
+
+        var transacaoEntidade = mock(Transacao.class);
+        var descricaoMock = mock(Descricao.class);
+        var response = mock(PagamentoResponse.class);
+
+        when(transacaoEntidade.getDescricao()).thenReturn(descricaoMock);
+        when(descricaoMock.getStatus()).thenReturn(StatusTransacao.AUTORIZADO);
+
+        when(repository.findById(idTeste)).thenReturn(Optional.of(transacaoEntidade));
+        when(repository.save(transacaoEntidade)).thenReturn(transacaoEntidade);
+        when(mapper.toResponse(transacaoEntidade)).thenReturn(response);
+
+        PagamentoResponse resultado = pagamentoService.realizarEstorno(idTeste);
+
+        assertNotNull(resultado);
+        assertEquals(response,resultado);
+
+        verify(descricaoMock).setStatus(StatusTransacao.CANCELADO);
+        verify(repository).save(transacaoEntidade);
+    }
+
+    @Test
+    @DisplayName("Deve falhar ao tentar estornar transação já CANCELADA")
+    void deveFalharEstornoJaCancelado() {
+        final String idTeste = "id-cancelado-456";
+
+        var transacaoEntidade = mock(Transacao.class);
+        var descricaoMock = mock(Descricao.class);
+
+        when(transacaoEntidade.getDescricao()).thenReturn(descricaoMock);
+        when(descricaoMock.getStatus()).thenReturn(StatusTransacao.CANCELADO);
+
+        when(repository.findById(idTeste)).thenReturn(Optional.of(transacaoEntidade));
+
+        EstornoNaoPermitidoException exception = assertThrows(EstornoNaoPermitidoException.class, () -> pagamentoService.realizarEstorno(idTeste));
+
+        assertTrue(exception.getMessage().contains("já está estornada"));
+
+        verify(repository, never()).save(any(Transacao.class));
+    }
+
+    @Test
+    @DisplayName("Deve falhar ao tentar estornar transação NEGADA")
+    void deveFalharEstornoNegado(){
+        final String idTeste = "id-negado-789";
+
+        var transacaoEntidade = mock(Transacao.class);
+        var descricaoMock = mock(Descricao.class);
+
+        when(transacaoEntidade.getDescricao()).thenReturn(descricaoMock);
+        when(descricaoMock.getStatus()).thenReturn(StatusTransacao.NEGADO);
+
+        when(repository.findById(idTeste)).thenReturn(Optional.of(transacaoEntidade));
+
+        EstornoNaoPermitidoException exception = assertThrows(EstornoNaoPermitidoException.class, () -> pagamentoService.realizarEstorno(idTeste));
+
+        assertTrue(exception.getMessage().contains("foi negada"));
+
+        verify(repository, never()).save(any(Transacao.class));
+    }
+
 }
