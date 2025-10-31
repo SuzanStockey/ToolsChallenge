@@ -4,6 +4,7 @@ import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequestD
 import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponseDTO;
 import io.github.suzanstockey.toolschallenge.service.PagamentoService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,14 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pagamentos")
+@RequiredArgsConstructor
 public class PagamentoController {
 
     private final PagamentoService pagamentoService;
-
-    @Autowired
-    public PagamentoController(PagamentoService pagamentoService) {
-        this.pagamentoService = pagamentoService;
-    }
 
     /**
      * Endpoint para realizar um novo pagamento.

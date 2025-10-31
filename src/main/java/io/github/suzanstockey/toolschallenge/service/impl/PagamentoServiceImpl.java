@@ -4,20 +4,17 @@ import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequestD
 import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponseDTO;
 import io.github.suzanstockey.toolschallenge.repository.TransacaoRepository;
 import io.github.suzanstockey.toolschallenge.service.PagamentoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PagamentoServiceImpl implements PagamentoService {
 
     private final TransacaoRepository repository;
-
-    @Autowired
-    public PagamentoServiceImpl(TransacaoRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public PagamentoResponseDTO realizarPagamento(PagamentoRequestDTO requestDTO) {
