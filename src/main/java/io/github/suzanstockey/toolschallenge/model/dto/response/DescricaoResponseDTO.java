@@ -1,14 +1,12 @@
 package io.github.suzanstockey.toolschallenge.model.dto.response;
 
-import lombok.Data;
+public record DescricaoResponseDTO (
 
-@Data
-public class DescricaoResponseDTO {
+    String valor,
+    String dataHora,
+    String estabelecimento,
+    String nsu,
+    String codigoAutorizacao,
+    String status
 
-    private String valor;
-    private String dataHora;
-    private String estabelecimento;
-    private String nsu;
-    private String codigoAutorizacao;
-    private String status;
-}
+){}
