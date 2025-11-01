@@ -1,24 +1,22 @@
-package io.github.suzanstockey.toolschalenge.model.dto.request;
+package io.github.suzanstockey.toolschallenge.model.dto.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 
-@Data
-public class TransacaoRequestDTO {
+public record TransacaoRequest(
 
     @NotBlank(message="O campo 'cartao' é obrigatório.")
-    private String cartao;
+    String cartao,
 
     @NotBlank(message="O campo 'id' (ID da transacao) é obrigatório.")
-    private String id;
+    String id,
 
     @NotNull(message="O objeto 'descricao' não pode ser nulo.")
     @Valid
-    private DescricaoRequestDTO descricao;
+    DescricaoRequest descricao,
 
     @NotNull(message="O objeto 'formaPagamento' não pode ser nulo.")
     @Valid
-    private FormaPagamentoRequestDTO formaPagamento;
-}
+    FormaPagamentoRequest formaPagamento
+){}

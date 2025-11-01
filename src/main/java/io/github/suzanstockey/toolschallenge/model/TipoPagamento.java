@@ -1,4 +1,4 @@
-package io.github.suzanstockey.toolschalenge.model;
+package io.github.suzanstockey.toolschallenge.model;
 
 public enum TipoPagamento {
     AVISTA,

@@ -1,13 +1,13 @@
-package io.github.suzanstockey.toolschalenge;
+package io.github.suzanstockey.toolschallenge;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ToolsChalengeApplication {
+public class ToolsChallengeApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ToolsChalengeApplication.class, args);
+        SpringApplication.run(ToolsChallengeApplication.class, args);
     }
 
 }

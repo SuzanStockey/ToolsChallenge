@@ -1,6 +1,6 @@
-package io.github.suzanstockey.toolschalenge.model.entity;
+package io.github.suzanstockey.toolschallenge.model.entity;
 
-import io.github.suzanstockey.toolschalenge.model.StatusTransacao;
+import io.github.suzanstockey.toolschallenge.model.StatusTransacao;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
