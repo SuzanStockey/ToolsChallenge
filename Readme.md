@@ -46,7 +46,7 @@ O objetivo deste projeto foi implementar uma API de Pagamentos para um banco, se
 
 1. **Clone o repositório:**
     ```bash
-    git clone [https://github.com/SuzanStockey/ToolsChallenge.git](https://github.com/SuzanStockey/ToolsChallenge.git)
+    git clone https://github.com/SuzanStockey/ToolsChallenge.git
     ```
 
 2. **Navegue até o diretório:**
@@ -268,7 +268,7 @@ This is the solution for the Tools Java Challenge [C], implementing a REST API f
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/SuzanStockey/ToolsChallenge.git](https://github.com/SuzanStockey/ToolsChallenge.git)
+    git clone https://github.com/SuzanStockey/ToolsChallenge.git
     ```
 
 2.  **Navigate to the directory:**
