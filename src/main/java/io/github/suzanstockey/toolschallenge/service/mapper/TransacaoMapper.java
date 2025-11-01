@@ -37,6 +37,7 @@ public class TransacaoMapper {
         formaPagamento.setParcelas(Integer.parseInt(dto.formaPagamento().parcelas()));
 
         Transacao transacao = new Transacao();
+        transacao.setId(dto.id());
         transacao.setCartao(dto.cartao());
         transacao.setDescricao(descricao);
         transacao.setFormaPagamento(formaPagamento);
