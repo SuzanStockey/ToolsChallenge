@@ -58,7 +58,7 @@ public class TransacaoMapper {
                 descEntity.getEstabelecimento(),
                 descEntity.getNsu(),
                 descEntity.getCodigoAutorizacao(),
-                descEntity.getStatus().toString()
+                descEntity.getStatus()
         );
 
         FormaPagamentoResponse formaResp = new FormaPagamentoResponse(

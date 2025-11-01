@@ -11,7 +11,7 @@ public record FormaPagamentoRequest(
         @NotBlank(message="O campo 'tipo' é obrigatório.")
         String tipo,
 
-        @Schema(description = "Número de parcelas da transação (deve ser '1' para AVISTA)", example = "1")
+        @Schema(description = "Número de parcelas da transação.", example = "1")
         @NotBlank(message="O campo 'parcelas' é obrigatório.")
         String parcelas
 ) {}

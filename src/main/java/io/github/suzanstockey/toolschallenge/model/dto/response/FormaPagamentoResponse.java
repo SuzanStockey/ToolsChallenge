@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FormaPagamentoResponse(
 
-        @Schema(description = "Tipo de transação. Deve ser \"AVISTA\", \"PARCELADO LOJA\" ou \"PARCELADO EMISSOR\"", example = "AVISTA")
+        @Schema(description = "Tipo de transação.", example = "AVISTA", allowableValues = {"AVISTA", "PARCELADO LOJA", "PARCELADO EMISSOR"})
         String tipo,
 
         @Schema(description = "Número de parcelas da transação", example = "1")

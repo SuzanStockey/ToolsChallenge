@@ -1,5 +1,6 @@
 package io.github.suzanstockey.toolschallenge.model.dto.response;
 
+import io.github.suzanstockey.toolschallenge.model.StatusTransacao;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record DescricaoResponse(
@@ -19,7 +20,7 @@ public record DescricaoResponse(
         @Schema(description = "Código de Autorização da transação", example = "147258369")
         String codigoAutorizacao,
 
-        @Schema(description = "Status da transação. Deve ser \"AUTORIZADO\", \"NEGADO\" ou \"CANCELADO\"", example = "AUTORIZADO")
-        String status
+        @Schema(description = "Status da transação.", example = "AUTORIZADO")
+        StatusTransacao status
 
 ){}
