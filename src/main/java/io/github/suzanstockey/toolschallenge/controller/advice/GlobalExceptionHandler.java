@@ -3,6 +3,7 @@ package io.github.suzanstockey.toolschallenge.controller.advice;
 import io.github.suzanstockey.toolschallenge.exception.EstornoNaoPermitidoException;
 import io.github.suzanstockey.toolschallenge.exception.TransacaoJaExistenteException;
 import io.github.suzanstockey.toolschallenge.exception.TransacaoNaoEncontradaException;
+import io.github.suzanstockey.toolschallenge.model.dto.response.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,28 +21,28 @@ public class GlobalExceptionHandler {
      * Captura a exceção de ID duplicado e retorna um HTTP 409 (Conflict).
      */
     @ExceptionHandler(TransacaoJaExistenteException.class)
-    public ResponseEntity<Map<String, String>> handleTransacaoJaExistente(TransacaoJaExistenteException e) {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiErrorResponse handleTransacaoJaExistente(TransacaoJaExistenteException e) {
 
-        Map<String, String> erro = Map.of("erro", e.getMessage());
-        return new ResponseEntity<>(erro, HttpStatus.CONFLICT);
+        return new ApiErrorResponse(e.getMessage());
     }
 
     /**
      * Captura a exceção de transação não encontrada e retorna um HTTP 404 (Not Found).
      */
     @ExceptionHandler(TransacaoNaoEncontradaException.class)
-    public ResponseEntity<Map<String, String>> handleTransacaoNaoEncontrada(TransacaoNaoEncontradaException e) {
-        Map<String, String> erro = Map.of("erro", e.getMessage());
-        return new ResponseEntity<>(erro, HttpStatus.NOT_FOUND);
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrorResponse handleTransacaoNaoEncontrada(TransacaoNaoEncontradaException e) {
+        return new ApiErrorResponse(e.getMessage());
     }
 
     /**
      * Captura exceções de regras de negócio (ex: estorno não permitido) e retorna um HTTP 422 (Unprocessable Entity).
      */
     @ExceptionHandler(EstornoNaoPermitidoException.class)
-    public ResponseEntity<Map<String, String>> handleEstornoNaoPermitido(EstornoNaoPermitidoException e) {
-        Map<String, String> erro = Map.of("erro", e.getMessage());
-        return new ResponseEntity<>(erro, HttpStatus.UNPROCESSABLE_ENTITY);
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ApiErrorResponse handleEstornoNaoPermitido(EstornoNaoPermitidoException e) {
+        return new ApiErrorResponse(e.getMessage());
     }
 
     /**
@@ -59,5 +60,14 @@ public class GlobalExceptionHandler {
         });
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Captura exceções de argumentos ilegais (ex: enum inválido) e retorna um HTTP 400 (Bad Request).
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrorResponse handleIllegalArgument(IllegalArgumentException e) {
+        return new ApiErrorResponse(e.getMessage());
     }
 }
