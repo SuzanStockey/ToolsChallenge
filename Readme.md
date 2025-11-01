@@ -2,6 +2,7 @@
 
 ![Badge - Java](https://img.shields.io/badge/Java-21-blue.svg?logo=openjdk&style=for-the-badge)
 ![Badge - Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.7-success.svg?logo=spring&style=for-the-badge)
+![Badge - Swagger](https://img.shields.io/badge/Swagger-UI-green.svg?logo=swagger&style=for-the-badge)
 ![Badge - Testes](https://img.shields.io/badge/Testes-JUnit_5-green.svg?logo=junit5&style=for-the-badge)
 
 Solução em Java/Spring Boot para o Desafio [C] da Tools, implementando uma API REST para transações de pagamento, consulta e estorno.
@@ -29,6 +30,7 @@ O objetivo deste projeto foi implementar uma API de Pagamentos para um banco, se
     * **Spring Data JPA:** Para a persistência de dados.
     * **Spring Boot Validation:** Para a validação declarativa dos requests.
 * **H2 Database:** Banco de dados em memória para facilitar a execução e os testes do projeto.
+* **SpringDoc (Swagger):** Para documentação de API interativa e automática.
 * **JUnit 5 e Mockito:** Para a cobertura de testes unitários da camada de serviço.
 * **Lombok:** Para reduzir o boilerplate em Entidades e Injeção de Dependências.
 * **Maven:** Para gerenciamento de dependências.
@@ -57,7 +59,7 @@ O objetivo deste projeto foi implementar uma API de Pagamentos para um banco, se
    mvn spring-boot:run
    ```
 
-A API estará disponível em `http://localhost:8080`.
+A API estará disponível em <http://localhost:8080>.
 
 ## 🧪 Como Rodar os Testes
 
@@ -68,15 +70,27 @@ Para executar os testes:
 mvn clean test
 ```
 
-## Endpoints da API
+## 📄 Documentação da API (Swagger)
 
-A URL base para a API é `http://localhost:8080/api/pagamentos`.
+A API está 100% documentada usando o padrão OpenAPI (SpringDoc), o que permite a visualização e interação com todos os endpoints em tempo real.
 
-| Verbo | Endpoint | Descrição |
-| :--- | :--- | :--- |
-| `POST` | `/` | Realiza um novo pagamento. |
-| `GET` | `/{id}` | Consulta uma transação por ID. |
-| `GET` | `/` | Lista todas as transações. |
+Após executar a aplicação, a documentação interativa (Swagger UI) estará disponível em:
+
+➡️ <http://localhost:8080/swagger-ui.html>
+
+O JSON da especificação OpenAPI está disponível em:
+
+➡️ <http://localhost:8080/v3/api-docs>
+
+## 📋 Endpoints da API
+
+A URL base para a API é <http://localhost:8080/api/pagamentos>.
+
+| Verbo  | Endpoint        | Descrição                          |
+|:-------|:----------------|:-----------------------------------|
+| `POST` | `/`             | Realiza um novo pagamento.         |
+| `GET`  | `/{id}`         | Consulta uma transação por ID.     |
+| `GET`  | `/`             | Lista todas as transações.         |
 | `POST` | `/{id}/estorno` | Realiza o estorno de um pagamento. |
 
 <details>
@@ -224,10 +238,10 @@ This is the solution for the Tools Java Challenge [C], implementing a REST API f
 
 * **Payment:** Receives a transaction, validates if the ID is unique, and saves it upon authorization.
 * **Query:** Allows fetching a specific transaction by `ID` or listing all transactions.
-* **Reversal (Estorno):** Allows an `AUTHORIZED` transaction to be canceled, changing its status to `CANCELADO`.
+* **Reversal (Estorno):** Allows an `AUTORIZADO`(authorized) transaction to be canceled, changing its status to `CANCELADO` (canceled).
 * **Business Logic Validation:**
     * Prevents payments with duplicate IDs (returns `HTTP 409 Conflict`).
-    * Prevents reversals on `DENIED` or already `CANCELED` transactions (returns `HTTP 422 Unprocessable Entity`).
+    * Prevents reversals on `NEGADO`(denied) or already `CANCELADO`(canceled) transactions (returns `HTTP 422 Unprocessable Entity`).
     * Returns `HTTP 404 Not Found` when querying or reversing non-existent IDs.
 
 ## 🛠️ Tech Stack
@@ -238,6 +252,7 @@ This is the solution for the Tools Java Challenge [C], implementing a REST API f
     * **Spring Data JPA:** For data persistence.
     * **Spring Boot Validation:** For declarative request validation.
 * **H2 Database:** In-memory database for ease of execution and testing.
+* **SpringDoc (Swagger):** For automatic and interactive API documentation.
 * **JUnit 5 & Mockito:** For service-layer unit testing.
 * **Lombok:** To reduce boilerplate in Entities and for Dependency Injection.
 * **Maven:** For dependency management.
@@ -266,7 +281,7 @@ This is the solution for the Tools Java Challenge [C], implementing a REST API f
     mvn spring-boot:run
     ```
 
-The API will be available at `http://localhost:8080`.
+The API will be available at <http://localhost:8080>.
 
 ## 🧪 How to Run Tests
 
@@ -277,15 +292,27 @@ To run the tests:
 mvn clean test
 ```
 
+## 📄 API Documentation (Swagger)
+
+The API is fully documented using the OpenAPI standard (SpringDoc), which allows for real-time visualization and interaction with all endpoints.
+
+After running the application, the interactive documentation (Swagger UI) will be available at:
+
+➡️ <http://localhost:8080/swagger-ui.html>
+
+The OpenAPI specification JSON is available at:
+
+➡️ <http://localhost:8080/v3/api-docs>
+
 ## 📋 API Endpoints
 
-The base URL for the API is `http://localhost:8080/api/pagamentos`.
+The base URL for the API is <http://localhost:8080/api/pagamentos>.
 
-| Verb   | Endpoint | Description                  |
-|:-------| :--- |:-----------------------------|
-| `POST` | `/` | Performs a new payment.      |
-| `GET`  | `/{id}` | Queries a transaction by ID. |
-| `GET`  | `/` | Lists all transactions.      |
+| Verb   | Endpoint        | Description                  |
+|:-------|:----------------|:-----------------------------|
+| `POST` | `/`             | Performs a new payment.      |
+| `GET`  | `/{id}`         | Queries a transaction by ID. |
+| `GET`  | `/`             | Lists all transactions.      |
 | `POST` | `/{id}/estorno` | Performs a payment reversal. |
 
 _(See JSON examples in the Portuguese section above)_
