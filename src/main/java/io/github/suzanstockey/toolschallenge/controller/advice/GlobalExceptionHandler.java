@@ -5,9 +5,12 @@ import io.github.suzanstockey.toolschallenge.exception.TransacaoJaExistenteExcep
 import io.github.suzanstockey.toolschallenge.exception.TransacaoNaoEncontradaException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
@@ -39,5 +42,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleEstornoNaoPermitido(EstornoNaoPermitidoException e) {
         Map<String, String> erro = Map.of("erro", e.getMessage());
         return new ResponseEntity<>(erro, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Captura exceções e validações (@Valid) e retorna um mapa dos campos e suas respectivas mensagens de erro (HTTP 400).
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException e) {
+        Map<String, String> errors = new HashMap<>();
+
+        e.getBindingResult().getFieldErrors().forEach(error -> {
+            String fieldName = error.getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }
