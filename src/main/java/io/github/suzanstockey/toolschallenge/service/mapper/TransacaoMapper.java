@@ -62,7 +62,7 @@ public class TransacaoMapper {
         );
 
         FormaPagamentoResponse formaResp = new FormaPagamentoResponse(
-                formaEntity.getTipo().toString(),
+                formaEntity.getTipo().getValorJson(),
                 formaEntity.getParcelas().toString()
         );
 

@@ -1,8 +1,8 @@
 # ToolsChallenge - API de Pagamentos
 
-[Badge - Java](https://img.shields.io/badge/Java-21-blue.svg?logo=openjdk&style=for-the-badge)
-[Badge - Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.7-success.svg?logo=spring&style=for-the-badge)
-[Badge - Testes](https://img.shields.io/badge/Testes-JUnit_5-green.svg?logo=junit5&style=for-the-badge)
+![Badge - Java](https://img.shields.io/badge/Java-21-blue.svg?logo=openjdk&style=for-the-badge)
+![Badge - Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.7-success.svg?logo=spring&style=for-the-badge)
+![Badge - Testes](https://img.shields.io/badge/Testes-JUnit_5-green.svg?logo=junit5&style=for-the-badge)
 
 Solução em Java/Spring Boot para o Desafio [C] da Tools, implementando uma API REST para transações de pagamento, consulta e estorno.
 
@@ -23,7 +23,7 @@ O objetivo deste projeto foi implementar uma API de Pagamentos para um banco, se
 
 ## 🛠️ Tecnologias Utilizadas
 
-* **Java 25**
+* **Java 21**
 * **Spring Boot 3.5.7**
     * **Spring Web:** Para a criação dos endpoints REST.
     * **Spring Data JPA:** Para a persistência de dados.
@@ -37,7 +37,7 @@ O objetivo deste projeto foi implementar uma API de Pagamentos para um banco, se
 
 ### Pré-requisitos
 
-* Java (JDK) 17+ (recomendado 21)
+* Java (JDK) 21+
 * Apache Maven 3.8+
 
 ### Passos
@@ -196,3 +196,112 @@ A URL base para a API é `http://localhost:8080/api/pagamentos`.
 ]
 ```
 </details>
+
+## 🧠 Decisões de Design
+
+* **Arquitetura em Camadas:** O projeto segue uma clara separação (Controller, Service, Repository) para manter a organização e facilitar os testes.
+
+* **Java Records para DTOs:** Em vez de classes tradicionais, foram usados `Record`s (Java 16+) para os objetos de transferência de dados (`PagamentoRequest`, `PagamentoResponse`, etc.). Isso garante imutabilidade e reduz drasticamente o boilerplate, seguindo as práticas de "Clean Code".
+
+* **Entidade `@Embedded`:** As classes `Descricao` e `FormaPagamento` foram modeladas como `@Embeddable` dentro da entidade `Transacao`. Isso mantém o código Java organizado (refletindo o JSON) e o banco de dados performático (uma única tabela).
+
+* **Injeção via Construtor:** A Injeção de Dependência é feita via Construtor (com `@RequiredArgsConstructor` do Lombok) em vez de `@Autowired` em campos. Isso torna as dependências explícitas, `final`, e facilita testes unitários puros.
+
+* **Tratamento de Exceções Global:** Um `@ControllerAdvice` centraliza o tratamento de exceções, convertendo exceções de negócio (ex: `TransacaoNaoEncontradaException`) em respostas HTTP semânticas (404, 409, 422), mantendo os Controllers limpos.
+
+* **Banco em Memória (H2):** O uso do H2 permite que o avaliador clone o repositório e execute o projeto imediatamente, sem qualquer configuração de banco de dados.
+
+* **Virtual Threads (Project Loom):** A aplicação está configurada com `spring.threads.virtual.enabled=true` (feature do Java 21+), otimizando-a para alta concorrência em operações de I/O (como chamadas ao banco) ao criar uma Thread Virtual leve para cada requisição.
+
+---
+---
+
+## 🚀 About The Project (EN)
+
+This is the solution for the Tools Java Challenge [C], implementing a REST API for payment, query, and reversal transactions.
+
+### ✨ Features
+
+* **Payment:** Receives a transaction, validates if the ID is unique, and saves it upon authorization.
+* **Query:** Allows fetching a specific transaction by `ID` or listing all transactions.
+* **Reversal (Estorno):** Allows an `AUTHORIZED` transaction to be canceled, changing its status to `CANCELADO`.
+* **Business Logic Validation:**
+    * Prevents payments with duplicate IDs (returns `HTTP 409 Conflict`).
+    * Prevents reversals on `DENIED` or already `CANCELED` transactions (returns `HTTP 422 Unprocessable Entity`).
+    * Returns `HTTP 404 Not Found` when querying or reversing non-existent IDs.
+
+## 🛠️ Tech Stack
+
+* **Java 21**
+* **Spring Boot 3.5.7**
+    * **Spring Web:** For creating REST endpoints.
+    * **Spring Data JPA:** For data persistence.
+    * **Spring Boot Validation:** For declarative request validation.
+* **H2 Database:** In-memory database for ease of execution and testing.
+* **JUnit 5 & Mockito:** For service-layer unit testing.
+* **Lombok:** To reduce boilerplate in Entities and for Dependency Injection.
+* **Maven:** For dependency management.
+
+## 🏁 How to Run
+
+### Prerequisites
+
+* Java (JDK) 21+
+* Apache Maven 3.8+
+
+### Steps
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/SuzanStockey/ToolsChallenge.git](https://github.com/SuzanStockey/ToolsChallenge.git)
+    ```
+
+2.  **Navigate to the directory:**
+    ```bash
+    cd ToolsChallenge
+    ```
+
+3.  **Run the project with Maven:**
+    ```bash
+    mvn spring-boot:run
+    ```
+
+The API will be available at `http://localhost:8080`.
+
+## 🧪 How to Run Tests
+
+The project includes a suite of unit tests for the service layer, ensuring all business rules function as expected.
+
+To run the tests:
+```bash
+mvn clean test
+```
+
+## 📋 API Endpoints
+
+The base URL for the API is `http://localhost:8080/api/pagamentos`.
+
+| Verb   | Endpoint | Description                  |
+|:-------| :--- |:-----------------------------|
+| `POST` | `/` | Performs a new payment.      |
+| `GET`  | `/{id}` | Queries a transaction by ID. |
+| `GET`  | `/` | Lists all transactions.      |
+| `POST` | `/{id}/estorno` | Performs a payment reversal. |
+
+_(See JSON examples in the Portuguese section above)_
+
+## 🧠 Design Decisions
+
+* **Layered Architecture:** The project follows a clear Controller-Service-Repository separation for organization and testability.
+
+* **Java Records for DTOs:** Instead of traditional classes, `Records` (Java 16+) are used for Data Transfer Objects (`PagamentoRequest`, `PagamentoResponse`, etc.). This ensures immutability and drastically reduces boilerplate, adhering to "Clean Code" practices.
+
+* **`@Embedded` Entities:** `Descricao` and `FormaPagamento` were modeled as `@Embeddable` within the `Transacao` entity. This keeps the Java code organized (mirroring the JSON) while maintaining a performant, single-table database design.
+
+* **Constructor Injection:** Dependency Injection is done via Constructor (with Lombok's `@RequiredArgsConstructor`) instead of Field Injection. This makes dependencies explicit, `final`, and simplifies pure unit testing.
+
+* **Global Exception Handling:** A `@ControllerAdvice` centralizes exception handling, translating business exceptions (e.g., `TransacaoNaoEncontradaException`) into semantic HTTP responses (404, 409, 422), keeping Controllers clean.
+
+* **In-Memory DB (H2):** Using H2 allows the evaluator to clone and run the project immediately with zero database setup.
+
+* **Virtual Threads (Project Loom):** The application is configured with `spring.threads.virtual.enabled=true` (a Java 21+ feature), optimizing it for high concurrency in I/O operations (like database calls) by creating a lightweight Virtual Thread for each request.
