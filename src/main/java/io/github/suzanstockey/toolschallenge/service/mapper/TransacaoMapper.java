@@ -62,7 +62,7 @@ public class TransacaoMapper {
         );
 
         FormaPagamentoResponse formaResp = new FormaPagamentoResponse(
-                formaEntity.getTipo().toString(),
+                formaEntity.getTipo().getValorJson(),
                 formaEntity.getParcelas().toString()
         );
 
@@ -80,7 +80,7 @@ public class TransacaoMapper {
      * Converte a String de tipo de pagamento no Enum TipoPagamento
      */
     private TipoPagamento parseTipoPagamento(String tipo) {
-        return TipoPagamento.valueOf(tipo.replace(" ", "_").toUpperCase());
+        return TipoPagamento.fromValor(tipo);
     }
 
     /**
