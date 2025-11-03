@@ -3,6 +3,8 @@ package io.github.suzanstockey.toolschallenge.controller;
 import io.github.suzanstockey.toolschallenge.model.dto.request.PagamentoRequest;
 import io.github.suzanstockey.toolschallenge.model.dto.response.ApiErrorResponse;
 import io.github.suzanstockey.toolschallenge.model.dto.response.PagamentoResponse;
+import io.github.suzanstockey.toolschallenge.service.ConsultaPagamentoService;
+import io.github.suzanstockey.toolschallenge.service.EstornoService;
 import io.github.suzanstockey.toolschallenge.service.PagamentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +29,8 @@ import java.util.List;
 public class PagamentoController {
 
     private final PagamentoService pagamentoService;
+    private final EstornoService estornoService;
+    private final ConsultaPagamentoService consultaPagamentoService;
 
     /**
      * Endpoint para realizar um novo pagamento.
@@ -50,7 +55,7 @@ public class PagamentoController {
     public ResponseEntity<PagamentoResponse> realizarPagamento(@Valid @RequestBody PagamentoRequest requestDTO) {
 
         PagamentoResponse responseDTO = pagamentoService.realizarPagamento(requestDTO);
-        return ResponseEntity.ok(responseDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     /**
@@ -71,7 +76,7 @@ public class PagamentoController {
     @GetMapping("/{id}")
     public ResponseEntity<PagamentoResponse> consultarPorId(@Parameter(description = "ID da transação a ser consultada", example = "100023568900001") @PathVariable String id) {
 
-        PagamentoResponse responseDTO = pagamentoService.consultarPorId(id);
+        PagamentoResponse responseDTO = consultaPagamentoService.consultarPorId(id);
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -90,7 +95,7 @@ public class PagamentoController {
     @GetMapping
     public ResponseEntity<List<PagamentoResponse>> consultarTodos() {
 
-        List<PagamentoResponse> responseList = pagamentoService.consultarTodos();
+        List<PagamentoResponse> responseList = consultaPagamentoService.consultarTodos();
         return ResponseEntity.ok(responseList);
     }
 
@@ -115,7 +120,7 @@ public class PagamentoController {
     @PostMapping("/{id}/estorno")
     public ResponseEntity<PagamentoResponse> realizarEstorno(@Parameter(description = "ID da transação a ser estornada", example = "100023568900001") @PathVariable String id) {
 
-        PagamentoResponse responseDTO = pagamentoService.realizarEstorno(id);
+        PagamentoResponse responseDTO = estornoService.realizarEstorno(id);
         return ResponseEntity.ok(responseDTO);
     }
 }

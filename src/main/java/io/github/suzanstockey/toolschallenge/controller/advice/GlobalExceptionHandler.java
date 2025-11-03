@@ -70,4 +70,25 @@ public class GlobalExceptionHandler {
     public ApiErrorResponse handleIllegalArgument(IllegalArgumentException e) {
         return new ApiErrorResponse(e.getMessage());
     }
+
+    /**
+     * Captura operações não suportadas (ex: um TipoPagamento sem Strategy) e retorna um HTTP 501 (Not Implemented).
+     */
+    @ExceptionHandler(UnsupportedOperationException.class)
+    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
+    public ApiErrorResponse handleUnsupportedOperation(UnsupportedOperationException e) {
+        return new ApiErrorResponse(e.getMessage());
+    }
+
+    /**
+     * Handler "Pega-Tudo" (Catch-All) para qualquer outra exceção não tratada.
+     * Retorna um HTTP 500 (Internal Server Error) genérico.
+     */
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiErrorResponse handleGenericException(Exception e) {
+        System.err.println("Exceção não tratada capturada: " + e.getMessage());
+        return new ApiErrorResponse("Ocorreu um erro interno inesperado no servidor.");
+    }
+
 }

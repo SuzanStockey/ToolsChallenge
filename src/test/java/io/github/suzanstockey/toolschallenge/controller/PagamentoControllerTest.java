@@ -45,7 +45,7 @@ class PagamentoControllerTest {
         mockMvc.perform(post("/api/pagamentos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.transacao.id", is("id-unico-123")))
                 .andExpect(jsonPath("$.transacao.descricao.status", is("AUTORIZADO")))
                 .andExpect(jsonPath("$.transacao.descricao.nsu", notNullValue()))
