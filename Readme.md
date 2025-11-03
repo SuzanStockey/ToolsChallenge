@@ -213,15 +213,19 @@ A URL base para a API é <http://localhost:8080/api/pagamentos>.
 
 ## 🧠 Decisões de Design
 
-* **Arquitetura em Camadas:** O projeto segue uma clara separação (Controller, Service, Repository) para manter a organização e facilitar os testes.
+* **Separação por Contexto (CQS) nos Serviços:** Em vez de um `Service` monolítico, a camada de serviço foi dividida por responsabilidade, seguindo o padrão CQS (Command Query Separation). Isso isola as lógicas de `PagamentoService` (Criação), `EstornoService` (Modificação) e `ConsultaPagamentoService` (Leitura), aderindo ao Princípio da Responsabilidade Única (SRP) e facilitando os testes.
 
-* **Java Records para DTOs:** Em vez de classes tradicionais, foram usados `Record`s (Java 16+) para os objetos de transferência de dados (`PagamentoRequest`, `PagamentoResponse`, etc.). Isso garante imutabilidade e reduz drasticamente o boilerplate, seguindo as práticas de "Clean Code".
+* **Padrão Strategy (Strategy Pattern):** A lógica de autorização de pagamento (para `AVISTA`, `PARCELADO LOJA`, etc.) foi extraída em Strategies. O `PagamentoService` atua como um roteador que delega a lógica para a estratégia correta. Isso obedece ao Princípio Aberto/Fechado (Open/Closed Principle): novos tipos de pagamento (ex: PIX) podem ser adicionados criando uma nova classe, sem nunca modificar o `PagamentoService` existente.
+
+* **Repositório DRY com Métodos `default`:** A lógica de "buscar-ou-falhar" (`findByIdOrThrow`) foi implementada como um método `default` na interface `TransacaoRepository`. Isso evita duplicação de código (DRY) nos serviços que precisam buscar uma transação (como `EstornoService` e `ConsultaPagamentoService`).
+
+* **Java Records para DTOs:** Em vez de classes tradicionais, foram usados `Records` (Java 16+) para os objetos de transferência de dados (`PagamentoRequest`, `PagamentoResponse`, etc.). Isso garante imutabilidade e reduz drasticamente o boilerplate.
 
 * **Entidade `@Embedded`:** As classes `Descricao` e `FormaPagamento` foram modeladas como `@Embeddable` dentro da entidade `Transacao`. Isso mantém o código Java organizado (refletindo o JSON) e o banco de dados performático (uma única tabela).
 
-* **Injeção via Construtor:** A Injeção de Dependência é feita via Construtor (com `@RequiredArgsConstructor` do Lombok) em vez de `@Autowired` em campos. Isso torna as dependências explícitas, `final`, e facilita testes unitários puros.
+* **Injeção via Construtor:** A Injeção de Dependência é feita via Construtor (majoritariamente com `@RequiredArgsConstructor` do Lombok) em vez de `@Autowired` em campos. Isso torna as dependências explícitas, `final`, e facilita testes unitários puros.
 
-* **Tratamento de Exceções Global:** Um `@ControllerAdvice` centraliza o tratamento de exceções, convertendo exceções de negócio (ex: `TransacaoNaoEncontradaException`) em respostas HTTP semânticas (404, 409, 422), mantendo os Controllers limpos.
+* **Tratamento de Exceções Global (Robusto):** Um `@RestControllerAdvice` centraliza o tratamento de exceções, convertendo exceções de negócio (ex: `TransacaoNaoEncontradaException`) e de sistema (ex: `UnsupportedOperationException`) em respostas HTTP semânticas (404, 409, 422, 501, 500), mantendo os Controllers limpos.
 
 * **Banco em Memória (H2):** O uso do H2 permite que o avaliador clone o repositório e execute o projeto imediatamente, sem qualquer configuração de banco de dados.
 
@@ -319,15 +323,19 @@ _(See JSON examples in the Portuguese section above)_
 
 ## 🧠 Design Decisions
 
-* **Layered Architecture:** The project follows a clear Controller-Service-Repository separation for organization and testability.
+* **Service Layer by Context (CQS):** Instead of a monolithic `Service`, the service layer was split by responsibility, following the CQS (Command Query Separation) pattern. This isolates the logic for `PagamentoService` (Creation), `EstornoService` (Modification), and `ConsultaPagamentoService` (Read), adhering to the Single Responsibility Principle (SRP) and simplifying testing.
 
-* **Java Records for DTOs:** Instead of traditional classes, `Records` (Java 16+) are used for Data Transfer Objects (`PagamentoRequest`, `PagamentoResponse`, etc.). This ensures immutability and drastically reduces boilerplate, adhering to "Clean Code" practices.
+* **Strategy Pattern:** The payment authorization logic (for `AVISTA`, `PARCELADO LOJA`, etc.) was extracted into Strategies. The `PagamentoService` acts as a router, delegating logic to the correct strategy. This follows the Open/Closed Principle (OCP): new payment types (e.g., PIX) can be added by creating a new class, without ever modifying the existing `PagamentoService`.
+
+* **DRY Repositories with `default` methods:** The "find-or-fail" logic (`findByIdOrThrow`) was implemented as a `default` method in the `TransacaoRepository` interface. This avoids code duplication (DRY) in services that need to fetch a transaction (like `EstornoService` and `ConsultaPagamentoService`).
+
+* **Java Records for DTOs:** Instead of traditional classes, `Records` (Java 16+) are used for Data Transfer Objects (`PagamentoRequest`, `PagamentoResponse`, etc.). This ensures immutability and drastically reduces boilerplate.
 
 * **`@Embedded` Entities:** `Descricao` and `FormaPagamento` were modeled as `@Embeddable` within the `Transacao` entity. This keeps the Java code organized (mirroring the JSON) while maintaining a performant, single-table database design.
 
-* **Constructor Injection:** Dependency Injection is done via Constructor (with Lombok's `@RequiredArgsConstructor`) instead of Field Injection. This makes dependencies explicit, `final`, and simplifies pure unit testing.
+* **Constructor Injection:** Dependency Injection is done via Constructor (mostly with Lombok's `@RequiredArgsConstructor`) instead of Field Injection. This makes dependencies explicit, `final`, and simplifies pure unit testing.
 
-* **Global Exception Handling:** A `@ControllerAdvice` centralizes exception handling, translating business exceptions (e.g., `TransacaoNaoEncontradaException`) into semantic HTTP responses (404, 409, 422), keeping Controllers clean.
+* **Robust Global Exception Handling:** A `@RestControllerAdvice` centralizes exception handling, translating business exceptions (e.g., `TransacaoNaoEncontradaException`) and system exceptions (e.g., `UnsupportedOperationException`) into semantic HTTP responses (404, 409, 422, 501, 500), keeping Controllers clean.
 
 * **In-Memory DB (H2):** Using H2 allows the evaluator to clone and run the project immediately with zero database setup.
 
