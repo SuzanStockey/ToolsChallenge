@@ -1,18 +1,15 @@
 package io.github.suzanstockey.toolschallenge.service.strategy;
 
 import io.github.suzanstockey.toolschallenge.model.TipoPagamento;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PagamentoAvistaStrategyTest {
+class PagamentoParceladoLojaStrategyTest {
 
-    private final PagamentoAvistaStrategy strategy = new PagamentoAvistaStrategy();
+    private final PagamentoParceladoLojaStrategy strategy = new PagamentoParceladoLojaStrategy();
 
     @Test
-    @DisplayName("Deve retornar o TipoPagamento AVISTA")
     void deveRetornarTipoCorreto() {
-        assertEquals(TipoPagamento.AVISTA, strategy.getTipo());
+        assertEquals(TipoPagamento.PARCELADO_LOJA, strategy.getTipo());
     }
 }

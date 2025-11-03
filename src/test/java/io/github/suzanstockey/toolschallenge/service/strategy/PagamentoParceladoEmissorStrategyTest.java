@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PagamentoAvistaStrategyTest {
+class PagamentoParceladoEmissorStrategyTest {
 
-    private final PagamentoAvistaStrategy strategy = new PagamentoAvistaStrategy();
+    private final PagamentoParceladoEmissorStrategy strategy = new PagamentoParceladoEmissorStrategy();
 
     @Test
-    @DisplayName("Deve retornar o TipoPagamento AVISTA")
+    @DisplayName("Deve retornar o TipoPagamento PARCELADO_EMISSOR")
     void deveRetornarTipoCorreto() {
-        assertEquals(TipoPagamento.AVISTA, strategy.getTipo());
+        assertEquals(TipoPagamento.PARCELADO_EMISSOR, strategy.getTipo());
     }
 }
